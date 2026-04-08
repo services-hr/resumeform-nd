@@ -1005,18 +1005,18 @@ function buildResumeHTML(data) {
   <!-- 左パネルの「タイトル＋個人情報」と高さを合わせるスペーサー -->
   <div id="rightSpacer" style="height:0;overflow:hidden;"></div>
 
-  <!-- ④学生時代頑張ったこと / 自己PR -->
-  <div style="border:0.05pt solid #999;padding:2mm;height:auto;min-height:50mm;">
-    <div style="font-size:7pt;font-weight:bold;text-align:center;margin-bottom:2mm;">学生時代頑張ったこと / 自己PR</div>
-    <div style="font-size:7pt;white-space:pre-wrap;line-height:1.6;">${data.selfPR||''}</div>
-  </div>
-
-  <!-- ⑤免許・資格 -->
-  <table class="inner" id="rightLicTable" style="margin-top:4mm;">
+  <!-- ④免許・資格 -->
+  <table class="inner" id="rightLicTable">
     <tr><th class="ym hd">年</th><th class="ym hd">月</th><th class="hd">免　許・資　格</th></tr>
     ${licRows}
     ${licEmptyRows}
   </table>
+
+  <!-- ⑤学生時代頑張ったこと / 自己PR -->
+  <div style="border:0.05pt solid #999;padding:2mm;height:auto;min-height:50mm;margin-top:4mm;">
+    <div style="font-size:7pt;font-weight:bold;text-align:center;margin-bottom:2mm;">学生時代頑張ったこと / 自己PR</div>
+    <div style="font-size:7pt;white-space:pre-wrap;line-height:1.6;">${data.selfPR||''}</div>
+  </div>
 
 </td>
 
