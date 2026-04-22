@@ -1,1 +1,851 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light only">
+<title>履歴書入力フォーム(新卒用)</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;500;600&family=Noto+Sans+JP:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    color-scheme: light only;
+    --ink: #1a1a2e;
+    --ink-light: #4a4a6a;
+    --ink-muted: #8888aa;
+    --paper: #faf9f6;
+    --paper-warm: #f5f2eb;
+    --white: #ffffff;
+    --border: #d4cfc4;
+    --border-strong: #a8a296;
+    --border-focus: #2c5282;
+    --accent: #2c5282;
+    --accent-light: #ebf0f8;
+    --accent-dark: #1e3a5f;
+    --red: #c53030;
+    --success: #276749;
+  }
 
+  html { color-scheme: light only; }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Noto Sans JP', sans-serif;
+    background: #faf9f6;
+    color: #1a1a2e;
+    min-height: 100vh;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  .page-header {
+    background: #1a1a2e;
+    color: #fff;
+    padding: 28px 40px 24px;
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+  }
+  .page-header h1 {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+  }
+  .page-header span {
+    font-size: 12px;
+    color: rgba(255,255,255,0.5);
+    letter-spacing: 0.1em;
+  }
+  .page-header .sub-label {
+    font-size: 11px;
+    color: #90cdf4;
+    letter-spacing: 0.15em;
+    margin-left: auto;
+    padding: 4px 10px;
+    border: 1px solid #90cdf4;
+    border-radius: 2px;
+  }
+  .progress-bar { height: 3px; background: rgba(255,255,255,0.15); position: relative; }
+  .progress-fill { height: 100%; background: #90cdf4; transition: width 0.4s ease; width: 0%; }
+  .container { max-width: 720px; margin: 0 auto; padding: 32px 24px 80px; }
+
+  .intro-notice {
+    background: #ebf0f8;
+    border-left: 3px solid #2c5282;
+    padding: 14px 18px;
+    margin-bottom: 24px;
+    font-size: 13px;
+    color: #1a1a2e;
+    line-height: 1.8;
+  }
+
+  .section {
+    background: #ffffff;
+    border: 1px solid #d4cfc4;
+    border-radius: 2px;
+    margin-bottom: 20px;
+    overflow: hidden;
+  }
+  .section-header {
+    padding: 14px 24px;
+    background: #f5f2eb;
+    border-bottom: 1px solid #d4cfc4;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section-num {
+    width: 22px; height: 22px;
+    background: #1a1a2e;
+    color: #fff;
+    border-radius: 50%;
+    font-size: 11px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 500;
+    flex-shrink: 0;
+  }
+  .section-title {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: #1a1a2e;
+  }
+  .section-count {
+    margin-left: auto;
+    font-size: 12px;
+    color: #4a4a6a;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+  }
+  .section-body { padding: 24px; }
+
+  .field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .field-full { grid-column: 1 / -1; }
+  .field { display: flex; flex-direction: column; gap: 5px; }
+  .field label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #1a1a2e;
+    letter-spacing: 0.04em;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .req { color: #c53030; font-size: 10px; font-weight: 500; }
+
+  .field input:not([type="checkbox"]),
+  .field textarea,
+  .field select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #a8a296;
+    border-radius: 2px;
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 14px;
+    color: #1a1a2e !important;
+    background-color: #ffffff !important;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+  }
+  .field select {
+    background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%231a1a2e' d='M6 9L2 4h8z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 10px;
+    padding-right: 30px;
+  }
+  .field input:not([type="checkbox"]):focus,
+  .field textarea:focus,
+  .field select:focus {
+    border-color: #2c5282;
+    box-shadow: 0 0 0 3px rgba(44,82,130,0.15);
+  }
+  .field input:not([type="checkbox"])::placeholder,
+  .field textarea::placeholder {
+    color: #8888aa !important;
+    opacity: 1;
+  }
+  .field textarea { resize: vertical; min-height: 80px; line-height: 1.7; }
+
+  .char-counter {
+    font-size: 11px;
+    color: #8888aa;
+    text-align: right;
+    margin-top: 2px;
+    letter-spacing: 0.03em;
+  }
+
+  .photo-section { display: flex; gap: 24px; align-items: flex-start; }
+  .photo-upload {
+    width: 108px; height: 144px;
+    border: 2px dashed #a8a296;
+    border-radius: 2px;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    cursor: pointer;
+    background: #ffffff;
+    position: relative; overflow: hidden;
+    flex-shrink: 0;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .photo-upload:hover { border-color: #2c5282; background: #ebf0f8; }
+  .photo-upload input[type="file"] {
+    position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%;
+  }
+  .photo-upload img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .photo-placeholder {
+    display: flex; flex-direction: column;
+    align-items: center; gap: 6px;
+    color: #4a4a6a;
+    pointer-events: none;
+  }
+  .photo-placeholder svg { width: 28px; height: 28px; opacity: 0.7; }
+  .photo-placeholder span { font-size: 11px; text-align: center; line-height: 1.4; font-weight: 500; }
+  .photo-info { flex: 1; }
+  .photo-info p { font-size: 12px; color: #1a1a2e; line-height: 1.8; }
+  .photo-info .photo-note {
+    margin-top: 8px; font-size: 11px;
+    color: #4a4a6a;
+    padding: 8px 10px;
+    background: #f5f2eb;
+    border-left: 2px solid #a8a296;
+  }
+
+  .list-entry {
+    border: 1px solid #d4cfc4;
+    border-radius: 2px;
+    padding: 14px;
+    margin-bottom: 10px;
+    background: #f5f2eb;
+    position: relative;
+  }
+  .entry-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 10px;
+  }
+  .entry-label {
+    font-size: 12px; font-weight: 600;
+    color: #1a1a2e; letter-spacing: 0.05em;
+  }
+  .btn-remove {
+    background: #ffffff;
+    border: 1px solid #e53e3e;
+    color: #c53030;
+    padding: 4px 12px;
+    border-radius: 2px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: 'Noto Sans JP', sans-serif;
+    transition: background 0.2s, color 0.2s;
+  }
+  .btn-remove:hover { background: #c53030; color: #ffffff; }
+
+  .btn-add {
+    width: 100%;
+    padding: 13px;
+    border: 2px solid #2c5282;
+    background: #ebf0f8;
+    color: #1e3a5f;
+    font-size: 14px;
+    font-weight: 600;
+    font-family: 'Noto Sans JP', sans-serif;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+    letter-spacing: 0.03em;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+  .btn-add:hover {
+    background: #2c5282;
+    color: #ffffff;
+  }
+  .btn-add:disabled {
+    border-color: #d4cfc4;
+    background: #f5f2eb;
+    color: #8888aa;
+    cursor: not-allowed;
+  }
+  .btn-add:disabled:hover {
+    background: #f5f2eb;
+    color: #8888aa;
+  }
+
+  .entry-grid4 { display: grid; grid-template-columns: 80px 60px 110px 1fr; gap: 8px; }
+  .entry-grid3 { display: grid; grid-template-columns: 90px 70px 1fr; gap: 8px; }
+
+  .submit-area {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: #ffffff;
+    border-top: 1px solid #d4cfc4;
+    padding: 16px 24px;
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    z-index: 100;
+    box-shadow: 0 -2px 8px rgba(0,0,0,0.05);
+  }
+  .btn-submit {
+    padding: 12px 48px;
+    background: #1a1a2e;
+    color: #ffffff;
+    border: none;
+    border-radius: 2px;
+    font-family: 'Noto Serif JP', serif;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+  }
+  .btn-submit:hover { background: #2d3748; }
+  .btn-submit:active { transform: scale(0.98); }
+  .btn-submit:disabled { background: #8888aa; cursor: not-allowed; }
+
+  .status-msg {
+    margin-top: 16px;
+    padding: 12px 16px;
+    border-radius: 2px;
+    font-size: 13px;
+    display: none;
+    font-weight: 500;
+  }
+  .status-msg.success { background: #f0fff4; color: #276749; border: 1px solid #9ae6b4; display: block; }
+  .status-msg.error { background: #fff5f5; color: #c53030; border: 1px solid #feb2b2; display: block; }
+  .status-msg.loading { background: #ebf0f8; color: #2c5282; border: 1px solid #90cdf4; display: block; }
+
+  .checkbox-label {
+    display: inline-flex !important;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    color: #1a1a2e !important;
+    padding: 12px 16px;
+    background: #ebf0f8;
+    border: 2px solid #2c5282;
+    border-radius: 2px;
+    transition: background 0.2s, border-color 0.2s;
+    user-select: none;
+  }
+  .checkbox-label:hover {
+    background: #d6e4f5;
+    border-color: #1e3a5f;
+  }
+  .checkbox-label input[type="checkbox"] {
+    appearance: none !important;
+    -webkit-appearance: none !important;
+    width: 20px !important;
+    height: 20px !important;
+    border: 2px solid #2c5282 !important;
+    border-radius: 3px !important;
+    background: #ffffff !important;
+    background-color: #ffffff !important;
+    cursor: pointer;
+    position: relative;
+    flex-shrink: 0;
+    padding: 0 !important;
+    margin: 0 !important;
+    transition: background 0.2s, border-color 0.2s;
+  }
+  .checkbox-label input[type="checkbox"]:checked {
+    background: #2c5282 !important;
+    background-color: #2c5282 !important;
+    border-color: #2c5282 !important;
+  }
+  .checkbox-label input[type="checkbox"]:checked::after {
+    content: '' !important;
+    position: absolute;
+    left: 5px;
+    top: 1px;
+    width: 6px;
+    height: 11px;
+    border: solid #ffffff;
+    border-width: 0 2.5px 2.5px 0;
+    transform: rotate(45deg);
+  }
+
+  @media (max-width: 520px) {
+    .field-grid { grid-template-columns: 1fr; }
+    .entry-grid4 { grid-template-columns: 70px 55px 95px 1fr; gap: 6px; }
+    .entry-grid3 { grid-template-columns: 80px 60px 1fr; }
+    .page-header { padding: 20px; flex-wrap: wrap; }
+    .page-header .sub-label { margin-left: 0; }
+    .container { padding: 20px 16px 100px; }
+    .section-body { padding: 16px; }
+    .photo-section { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <h1>履　歴　書</h1>
+  <span>CURRICULUM VITAE</span>
+  <span class="sub-label">新卒用</span>
+</div>
+<div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+
+<div class="container">
+
+  <div class="intro-notice">
+    以下の項目に必要事項をご入力のうえ、ページ下の「送信」ボタンをクリックしてください。入力内容をもとに履歴書PDFが自動で作成されます。
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">1</div>
+      <span class="section-title">作成日</span>
+    </div>
+    <div class="section-body">
+      <div class="field" style="max-width:200px">
+        <label>作成日 <span class="req">必須</span></label>
+        <input type="date" id="dateCreated">
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">2</div>
+      <span class="section-title">証明写真</span>
+    </div>
+    <div class="section-body">
+      <div class="photo-section">
+        <div class="photo-upload" id="photoBox">
+          <input type="file" id="photoInput" accept="image/*">
+          <div class="photo-placeholder" id="photoPlaceholder">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <rect x="3" y="3" width="18" height="18" rx="2"/>
+              <circle cx="8.5" cy="8.5" r="1.5"/>
+              <path d="M21 15l-5-5L5 21"/>
+            </svg>
+            <span>クリックして<br>写真を選択</span>
+          </div>
+          <img id="photoPreview" style="display:none">
+        </div>
+        <div class="photo-info">
+          <p>・縦4cm × 横3cm（3ヶ月以内に撮影）<br>・正面・脱帽・背景無地<br>・JPG / PNG 形式</p>
+          <div class="photo-note">ブラウザ内で自動圧縮（最大400px・品質75%）して送信します。</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">3</div>
+      <span class="section-title">基本情報</span>
+    </div>
+    <div class="section-body">
+      <div class="field-grid">
+        <div class="field">
+          <label>氏名（漢字） <span class="req">必須</span></label>
+          <input type="text" id="name" placeholder="山田 太郎">
+        </div>
+        <div class="field field-full">
+          <label>氏名（ふりがな） <span class="req">必須</span></label>
+          <input type="text" id="nameKana" placeholder="やまだ たろう">
+        </div>
+        <div class="field">
+          <label>生年月日 <span class="req">必須</span></label>
+          <input type="date" id="birthDate">
+        </div>
+        <div class="field">
+          <label>性別</label>
+          <select id="gender">
+            <option value="">選択してください</option>
+            <option>男性</option>
+            <option>女性</option>
+            <option>回答しない</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>郵便番号 <span class="req">必須</span></label>
+          <input type="text" id="postalCode" placeholder="100-0001" maxlength="8">
+        </div>
+        <div class="field">
+          <label>電話番号</label>
+          <input type="tel" id="phone" placeholder="090-0000-0000">
+        </div>
+        <div class="field field-full">
+          <label>現住所 <span class="req">必須</span></label>
+          <input type="text" id="address" placeholder="東京都千代田区千代田1-1">
+        </div>
+        <div class="field field-full">
+          <label>現住所フリガナ（都道府県・市区町村まで）</label>
+          <input type="text" id="addressKana" placeholder="とうきょうとちよだく">
+        </div>
+        <div class="field field-full">
+          <label>メールアドレス</label>
+          <input type="email" id="email" placeholder="taro@example.com">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">4</div>
+      <span class="section-title">連絡先</span>
+    </div>
+    <div class="section-body">
+      <div class="field" style="margin-bottom: 16px;">
+        <label class="checkbox-label">
+          <input type="checkbox" id="contactSameAsAddress" checked onchange="toggleContactFields()">
+          <span>現住所と同じ</span>
+        </label>
+      </div>
+      <div id="contactFields" style="display:none;">
+        <div class="field-grid">
+          <div class="field">
+            <label>連絡先 郵便番号</label>
+            <input type="text" id="contactPostalCode" placeholder="100-0001" maxlength="8">
+          </div>
+          <div class="field">
+            <label>連絡先 電話番号</label>
+            <input type="tel" id="contactPhone" placeholder="090-0000-0000">
+          </div>
+          <div class="field field-full">
+            <label>連絡先 住所</label>
+            <input type="text" id="contactAddress" placeholder="東京都千代田区千代田1-1">
+          </div>
+          <div class="field field-full">
+            <label>連絡先 住所フリガナ（都道府県・市区町村まで）</label>
+            <input type="text" id="contactAddressKana" placeholder="とうきょうとちよだく">
+          </div>
+          <div class="field field-full">
+            <label>連絡先 メールアドレス</label>
+            <input type="email" id="contactEmail" placeholder="taro@example.com">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">5</div>
+      <span class="section-title">学歴</span>
+      <span class="section-count" id="eduCount">0 / 7</span>
+    </div>
+    <div class="section-body">
+      <div id="eduList"></div>
+      <button class="btn-add" id="eduAddBtn" onclick="addEdu()">＋ 学歴を追加</button>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">6</div>
+      <span class="section-title">職歴</span>
+      <span class="section-count" id="careerCount">0 / 6</span>
+    </div>
+    <div class="section-body">
+      <div id="careerList"></div>
+      <button class="btn-add" id="careerAddBtn" onclick="addCareer()">＋ 職歴を追加</button>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">7</div>
+      <span class="section-title">免許・資格</span>
+      <span class="section-count" id="shikakuCount">0 / 4</span>
+    </div>
+    <div class="section-body">
+      <div id="shikakuList"></div>
+      <button class="btn-add" id="shikakuAddBtn" onclick="addShikaku()">＋ 免許・資格を追加</button>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">8</div>
+      <span class="section-title">学生時代力を入れたことや自己PR</span>
+    </div>
+    <div class="section-body">
+      <div class="field">
+        <label>学生時代力を入れたことや自己PR（ガクチカ・強み・志望動機など）</label>
+        <textarea id="jikoPR" rows="8" placeholder="例）大学時代、○○部の活動に注力し、チームで△△という成果を上げました。この経験から、課題解決力とチームワークを身につけました。貴社では..."></textarea>
+        <div class="char-counter"><span id="jikoPRCount">0</span> 文字</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="statusMsg" class="status-msg"></div>
+</div>
+
+<div class="submit-area">
+  <button class="btn-submit" id="submitBtn" onclick="submitForm()">送　信</button>
+</div>
+
+<script>
+  const GAS_URL = 'YOUR_GAS_WEB_APP_URL_HERE';
+
+  let photoBase64 = null;
+  const LIMITS = { edu: 7, career: 6, shikaku: 4 };
+  const KUBUN = {
+    edu: ['入学', '卒業', '卒業見込み', '退学'],
+    career: ['入社', '退社'],
+  };
+
+  document.getElementById('dateCreated').value = new Date().toISOString().split('T')[0];
+
+  function updateProgress() {
+    const fields = ['name','nameKana','birthDate','address','postalCode','dateCreated'];
+    const filled = fields.filter(id => document.getElementById(id)?.value?.trim()).length;
+    const pct = Math.round((filled / fields.length) * 100);
+    document.getElementById('progressFill').style.width = pct + '%';
+  }
+  document.querySelectorAll('input,textarea,select').forEach(el => {
+    el.addEventListener('input', updateProgress);
+    el.addEventListener('change', updateProgress);
+  });
+  updateProgress();
+
+  // 自己PR 文字数カウンター
+  document.getElementById('jikoPR').addEventListener('input', function(e) {
+    document.getElementById('jikoPRCount').textContent = e.target.value.length;
+  });
+
+  document.getElementById('photoInput').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(ev) {
+      const img = new Image();
+      img.onload = function() {
+        const canvas = document.createElement('canvas');
+        const MAX = 400;
+        let w = img.width, h = img.height;
+        if (w > h) { if (w > MAX) { h = h * MAX / w; w = MAX; } }
+        else { if (h > MAX) { w = w * MAX / h; h = MAX; } }
+        canvas.width = Math.round(w);
+        canvas.height = Math.round(h);
+        canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+        photoBase64 = canvas.toDataURL('image/jpeg', 0.75).split(',')[1];
+        const preview = document.getElementById('photoPreview');
+        preview.src = canvas.toDataURL('image/jpeg', 0.75);
+        preview.style.display = 'block';
+        document.getElementById('photoPlaceholder').style.display = 'none';
+      };
+      img.src = ev.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+
+  function addEduEntry() {
+    const list = document.getElementById('eduList');
+    if (list.children.length >= LIMITS.edu) return;
+    const id = 'edu_' + Date.now();
+    const div = document.createElement('div');
+    div.className = 'list-entry';
+    div.id = id;
+    const options = KUBUN.edu.map(k => `<option value="${k}">${k}</option>`).join('');
+    div.innerHTML = `
+      <div class="entry-header">
+        <span class="entry-label" data-label>学歴 ${list.children.length + 1}</span>
+        <button class="btn-remove" onclick="removeEntry('${id}', 'edu')">削除</button>
+      </div>
+      <div class="entry-grid4">
+        <div class="field"><label>年</label><input type="number" name="year" min="1900" max="2100" placeholder="2024"></div>
+        <div class="field"><label>月</label><input type="number" name="month" min="1" max="12" placeholder="4"></div>
+        <div class="field"><label>区分</label><select name="kubun"><option value="">選択</option>${options}</select></div>
+        <div class="field"><label>学校名・学部・学科</label><input type="text" name="content" placeholder="例）○○大学 経済学部 経済学科"></div>
+      </div>`;
+    list.appendChild(div);
+    updateListCount('edu');
+  }
+
+  function addCareerEntry() {
+    const list = document.getElementById('careerList');
+    if (list.children.length >= LIMITS.career) return;
+    const id = 'career_' + Date.now();
+    const div = document.createElement('div');
+    div.className = 'list-entry';
+    div.id = id;
+    const options = KUBUN.career.map(k => `<option value="${k}">${k}</option>`).join('');
+    div.innerHTML = `
+      <div class="entry-header">
+        <span class="entry-label" data-label>職歴 ${list.children.length + 1}</span>
+        <button class="btn-remove" onclick="removeEntry('${id}', 'career')">削除</button>
+      </div>
+      <div class="entry-grid4">
+        <div class="field"><label>年</label><input type="number" name="year" min="1900" max="2100" placeholder="2024"></div>
+        <div class="field"><label>月</label><input type="number" name="month" min="1" max="12" placeholder="4"></div>
+        <div class="field"><label>区分</label><select name="kubun"><option value="">選択</option>${options}</select></div>
+        <div class="field"><label>会社名・部署・業務</label><input type="text" name="content" placeholder="例）株式会社○○ インターンシップ参加"></div>
+      </div>`;
+    list.appendChild(div);
+    updateListCount('career');
+  }
+
+  function addShikakuEntry() {
+    const list = document.getElementById('shikakuList');
+    if (list.children.length >= LIMITS.shikaku) return;
+    const id = 'shikaku_' + Date.now();
+    const div = document.createElement('div');
+    div.className = 'list-entry';
+    div.id = id;
+    div.innerHTML = `
+      <div class="entry-header">
+        <span class="entry-label" data-label>免許・資格 ${list.children.length + 1}</span>
+        <button class="btn-remove" onclick="removeEntry('${id}', 'shikaku')">削除</button>
+      </div>
+      <div class="entry-grid3">
+        <div class="field"><label>年</label><input type="number" name="year" min="1900" max="2100" placeholder="2024"></div>
+        <div class="field"><label>月</label><input type="number" name="month" min="1" max="12" placeholder="4"></div>
+        <div class="field"><label>資格名</label><input type="text" name="content" placeholder="例）普通自動車第一種運転免許 取得"></div>
+      </div>`;
+    list.appendChild(div);
+    updateListCount('shikaku');
+  }
+
+  function removeEntry(id, kind) {
+    document.getElementById(id)?.remove();
+    updateListCount(kind);
+    renumberEntries(kind);
+  }
+
+  function renumberEntries(kind) {
+    const map = { edu: '学歴', career: '職歴', shikaku: '免許・資格' };
+    const list = document.getElementById(kind + 'List');
+    list.querySelectorAll('.list-entry').forEach((el, i) => {
+      const lbl = el.querySelector('[data-label]');
+      if (lbl) lbl.textContent = `${map[kind]} ${i+1}`;
+    });
+  }
+
+  function updateListCount(kind) {
+    const list = document.getElementById(kind + 'List');
+    const count = list.children.length;
+    const limit = LIMITS[kind];
+    document.getElementById(kind + 'Count').textContent = `${count} / ${limit}`;
+    const btn = document.getElementById(kind + 'AddBtn');
+    btn.disabled = count >= limit;
+    const nameMap = { edu: '学歴', career: '職歴', shikaku: '免許・資格' };
+    btn.textContent = count >= limit
+      ? `上限（${limit}件）に達しました`
+      : `＋ ${nameMap[kind]}を追加`;
+  }
+
+  function addEdu() { addEduEntry(); }
+  function addCareer() { addCareerEntry(); }
+  function addShikaku() { addShikakuEntry(); }
+
+  function collectList(listId, withKubun) {
+    const entries = [];
+    document.getElementById(listId).querySelectorAll('.list-entry').forEach(el => {
+      const item = {
+        year: el.querySelector('[name="year"]').value,
+        month: el.querySelector('[name="month"]').value,
+        content: el.querySelector('[name="content"]').value,
+      };
+      if (withKubun) {
+        item.kubun = el.querySelector('[name="kubun"]').value;
+      }
+      entries.push(item);
+    });
+    return entries;
+  }
+
+  function validate() {
+    const required = {
+      name: '氏名（漢字）',
+      nameKana: '氏名（ふりがな）',
+      birthDate: '生年月日',
+      postalCode: '郵便番号',
+      address: '現住所',
+      dateCreated: '作成日',
+    };
+    for (const [id, label] of Object.entries(required)) {
+      if (!document.getElementById(id)?.value?.trim()) {
+        return `「${label}」は必須項目です`;
+      }
+    }
+    return null;
+  }
+
+  function toggleContactFields() {
+    const checked = document.getElementById('contactSameAsAddress').checked;
+    document.getElementById('contactFields').style.display = checked ? 'none' : 'block';
+  }
+
+  async function submitForm() {
+    if (!GAS_URL || GAS_URL === 'YOUR_GAS_WEB_APP_URL_HERE') {
+      showStatus('error', 'システムエラー: 送信先が設定されていません。管理者にお問い合わせください。');
+      return;
+    }
+    const err = validate();
+    if (err) { showStatus('error', err); return; }
+
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = true;
+    showStatus('loading', '送信中です。しばらくお待ちください...');
+
+    const payload = {
+      formType: 'shinsotsu',
+      dateCreated: document.getElementById('dateCreated').value,
+      name: document.getElementById('name').value,
+      nameKana: document.getElementById('nameKana').value,
+      birthDate: document.getElementById('birthDate').value,
+      gender: document.getElementById('gender').value,
+      postalCode: document.getElementById('postalCode').value,
+      address: document.getElementById('address').value,
+      addressKana: document.getElementById('addressKana').value,
+      phone: document.getElementById('phone').value,
+      email: document.getElementById('email').value,
+      contactSameAsAddress: document.getElementById('contactSameAsAddress').checked,
+      contactPostalCode: document.getElementById('contactPostalCode').value,
+      contactAddress: document.getElementById('contactAddress').value,
+      contactAddressKana: document.getElementById('contactAddressKana').value,
+      contactPhone: document.getElementById('contactPhone').value,
+      contactEmail: document.getElementById('contactEmail').value,
+      jikoPR: document.getElementById('jikoPR').value,
+      education: collectList('eduList', true),
+      career: collectList('careerList', true),
+      shikaku: collectList('shikakuList', false),
+      photo: photoBase64 || null,
+    };
+
+    try {
+      await fetch(GAS_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      showStatus('success', '✓ 送信が完了しました。ご入力ありがとうございました。');
+      btn.disabled = false;
+    } catch (e) {
+      showStatus('error', '送信に失敗しました。しばらく時間をおいて再度お試しください。');
+      btn.disabled = false;
+    }
+  }
+
+  function showStatus(type, msg) {
+    const el = document.getElementById('statusMsg');
+    el.className = 'status-msg ' + type;
+    el.textContent = msg;
+    el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  addEdu();
+  addCareer();
+  addShikaku();
+
+  // ページ読み込み時に連絡先チェックボックスの初期状態を確実に反映
+  document.getElementById('contactSameAsAddress').checked = true;
+  toggleContactFields();
+</script>
+</body>
+</html>
